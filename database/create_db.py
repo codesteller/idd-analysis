@@ -1,10 +1,15 @@
 import xml.etree.ElementTree as ET
 import os
 from tqdm import tqdm
+from devlogger import devlogger
+import logging
 
 
 class Database:
     def __init__(self, img_dir, lbl_dir):
+        # Initialize logger
+        self.logger = devlogger.Logger(logging.getLogger(__name__))
+
         self.img_dir = img_dir
         self.lbl_dir = lbl_dir
         self.imgtypes = ["png", "jpeg", "jpg"]
@@ -42,14 +47,14 @@ class Database:
                 print("Image with key {} not found.".format(lbl_key))
 
             # Assemble the database dictionary
-            _temp_dict["image_path"] = _im_path                         # Image path
-            _temp_dict["label_path"] = lblpaths[lbl_key]                # Annotation path
+            _temp_dict["image_path"] = _im_path  # Image path
+            _temp_dict["label_path"] = lblpaths[lbl_key]  # Annotation path
             _temp_dict["image_size"] = labels_dict['size']
             _temp_dict["annotation"] = labels_dict['object_list']
 
             db_dict[lbl_key] = _temp_dict
 
-        print("Extraction completed")
+        self.logger.log_i("Extraction completed")
         return db_dict
 
     def _get_images(self, file_dir, file_types):
@@ -73,7 +78,7 @@ class Database:
                         if _basename not in file_list:
                             file_list[_basename] = _path
                         else:
-                            print("duplicate filename: {} & {}".format(_path, file_list[_basename]))
+                            self.logger.log_e("duplicate filename: {} & {}".format(_path, file_list[_basename]))
         return file_list
 
     @staticmethod
