@@ -37,11 +37,40 @@ class Database:
         db_dict = dict()
 
         for lbl_path in lblpaths:
-            tree = ET.parse(lbl_path)
-            root = tree.getroot()
-            basename = os.path.basename(lbl_path)
+            annotation_tree = ET.parse(lbl_path)
+            annotation_obj = annotation_tree.getroot()
+            labels_dict = self._get_annotation(annotation_obj)
 
-            xml_obj = xml_parse.parse(lbl_path)
+            print("Here")
+
+
+    @staticmethod
+    def _get_annotation(annotation_obj):
+        anno_obj = dict()
+        object_list = list()
+        counter = 0
+
+        for iobj in annotation_obj:
+            temp = list()
+            if iobj.tag.lower() == "filename":
+                anno_obj["filename"] = [iobj.text]
+            if iobj.tag.lower() == "size":
+                anno_obj["size"] = [iobj[0].text, iobj[1].text]
+            if iobj.tag.lower() == "object":
+                temp.append(counter)  # Box ID
+                temp.append(iobj[0].text)  # Box Class
+                temp.append(int(iobj[1][0].text))  # Box x0
+                temp.append(int(iobj[1][1].text))  # Box y0
+                temp.append(int(iobj[1][2].text))  # Box x1
+                temp.append(int(iobj[1][3].text))  # Box y1
+                counter += 1
+                object_list.append(temp)
+        print(counter)
+        anno_obj["object_list"] = object_list
+        for iobj in anno_obj["object_list"]:
+            print(iobj)
+
+        return anno_obj
 
 
 _db = Database(image_dir, label_dir)
