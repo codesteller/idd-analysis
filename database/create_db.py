@@ -32,7 +32,7 @@ class Database:
             _temp_dict = dict()
             annotation_tree = ET.parse(lblpaths[lbl_key])
             annotation_obj = annotation_tree.getroot()
-            labels_dict = self._get_annotation(annotation_obj)
+            labels_dict = self._parse_annotation(annotation_obj)
 
             # get image paths
             try:
@@ -77,7 +77,13 @@ class Database:
         return file_list
 
     @staticmethod
-    def _get_annotation(annotation_obj):
+    def _parse_annotation(annotation_obj):
+        """
+        @brief: This function parses the annotation object in xml element tree form to extract
+        the annotation information in to a dictionary.
+        :param annotation_obj: xml element tree object
+        :return: dictionary with metatdata (filename, folder, image size) and object list
+        """
         anno_obj = dict()
         object_list = list()
         counter = 0
@@ -105,6 +111,11 @@ class Database:
 
     @staticmethod
     def _splitall(path):
+        """
+        Function is reused from https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html
+        :param path: any file or directory path
+        :return: list of the directories (in sequence) in the directory or file path
+        """
         allparts = []
         while 1:
             parts = os.path.split(path)
