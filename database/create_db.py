@@ -6,6 +6,9 @@ import logging
 
 
 class Database:
+    """
+    @brief: This is a database class that aggregates images and annotation.
+    """
     def __init__(self, img_dir, lbl_dir):
         # Initialize logger
         self.logger = devlogger.Logger(logging.getLogger(__name__))
@@ -16,10 +19,9 @@ class Database:
         self.lbltypes = ["xml"]
 
         # Call methods
-        self.db = self.make_dataset
+        self.db = self._make_dataset()
 
-    @property
-    def make_dataset(self):
+    def _make_dataset(self):
         """
         @brief: Generate dataset from the image and annotation directories.
         This function extracts the image paths, corresponding label or annotation file path, parses the annotation file

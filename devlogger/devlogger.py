@@ -1,11 +1,16 @@
 import logging
+import os
 
 
 class Logger:
-    def __init__(self, logger):
+    def __init__(self, logger, filename='application.log'):
         # self.logger = logging.getLogger(__name__)
         self.logger = logger
-        logging.basicConfig(filename='application.log', filemode='w',
+        self.log_dir = "logs"
+        if not os.path.exists(self.log_dir):
+            os.makedirs(self.log_dir)
+        self.filename = os.path.join(self.log_dir, filename)
+        logging.basicConfig(filename=self.filename, filemode='w',
                             format='%(levelname)s : %(name)s : %(message)s',
                             level=logging.INFO)
         self.logger.info("Logger setup successful")
