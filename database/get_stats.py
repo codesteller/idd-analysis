@@ -4,9 +4,16 @@ import logging
 
 class DBStats:
     """
-    @brief:
+    @brief: This class takes the database object and generates statistics of the dataset
+            Statistics includes
+            1. No. of Instances per class per image
+            2.
     """
     def __init__(self, dbdict):
+        """
+
+        :param dbdict: Database in dictionary
+        """
         self.logger = devlogger.Logger(logging.getLogger(__name__))
         self.db = dbdict
         self.class_list = list()
@@ -15,7 +22,11 @@ class DBStats:
         self.stats = self.get_stats()
 
     def get_stats(self):
-        print(len(self.db))
+        """
+
+        :return: stats_dict -> statistics per image in dictionary with image name as key
+        """
+        self.logger.log_i("Extracting statistics")
         stats_dict = dict()
 
         for idx in self.db:
